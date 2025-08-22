@@ -1,0 +1,17 @@
+CREATE DATABASE excel_parcer;
+use excel_parcer;
+create Table guides (
+    id_rec INTEGER UNSIGNED PRIMARY KEY,
+    name_guid VARCHAR(90) NOT NULL,
+    acceptance_date DATE NOT NULL,
+    id_documnet VARCHAR(20) NOT NULL UNIQUE,
+    check_date DATE NOT NULL,
+    id_category TINYINT UNSIGNED,
+    FOREIGN KEY (id_category) REFERENCES category_guide(id_category)
+)
+
+
+create table category_guide (
+    id_category TINYINT UNSIGNED PRIMARY KEY,
+    name_category VARCHAR(200) NOT NULL UNIQUE
+)
