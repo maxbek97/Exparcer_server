@@ -9,6 +9,7 @@ namespace server.Services
     public interface IGuideService
     {
         Task CreateGuideAsync(RecordDTO dto);
+        Task<List<StructureUnitsDTO>> GetUnitsList();
     }
 
     public class GuideService : IGuideService
@@ -48,6 +49,11 @@ namespace server.Services
             _context.Guides.Add(guide);
 
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<StructureUnitsDTO>> GetUnitsList()
+        {
+            var structures = await _unitRepository.GetUnitsAsync();
+            return structures;
         }
     }
 }

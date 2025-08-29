@@ -8,6 +8,7 @@ namespace server.Repositories
     public interface IStructUnitRepository
     {
         Task<StructUnit> GetOrCreateAsync(string structName);
+        Task<List<StructureUnitsDTO>> GetUnitsAsync();
     }
 
     public class StructUnitRepository : IStructUnitRepository
@@ -32,6 +33,14 @@ namespace server.Repositories
             }
 
             return unit;
+        }
+        public async Task<List<StructureUnitsDTO>> GetUnitsAsync()
+        {
+            var units = await _context.StructUnits
+            .Select(u => new StructureUnitsDTO { NameStruct = u.NameStruct, IdUnit = u.IdUnit  })
+            .ToListAsync();
+
+            return units;
         }
     }
 }

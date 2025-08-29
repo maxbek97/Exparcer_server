@@ -48,4 +48,11 @@ public class HomeController : ControllerBase
         
     }
 
+    [HttpGet("get_units")]
+    public async Task<IActionResult> GetStructUnits()
+    {
+        var units = await _guideService.GetUnitsList();
+        return Ok(units);
+    }
+
 }
