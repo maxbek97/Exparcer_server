@@ -16,9 +16,9 @@ public partial class ExcelParcerContext : DbContext
     {
     }
 
-    public virtual DbSet<CategoryGuide> CategoryGuides { get; set; }
-
     public virtual DbSet<Guide> Guides { get; set; }
+
+    public virtual DbSet<StructUnit> StructUnits { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,46 +26,46 @@ public partial class ExcelParcerContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<CategoryGuide>(entity =>
-        {
-            entity.HasKey(e => e.IdCategory).HasName("PRIMARY");
-
-            entity.ToTable("category_guide");
-
-            entity.HasIndex(e => e.NameCategory, "name_category").IsUnique();
-
-            entity.Property(e => e.IdCategory).HasColumnName("id_category");
-            entity.Property(e => e.NameCategory)
-                .HasMaxLength(200)
-                .HasColumnName("name_category");
-        });
-
         modelBuilder.Entity<Guide>(entity =>
         {
-            entity.HasKey(e => e.IdRec).HasName("PRIMARY");
+            entity.HasKey(e => new { e.IdDocument, e.IdStructUnit })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
             entity.ToTable("guides");
 
-            entity.HasIndex(e => e.IdCategory, "id_category");
+            entity.HasIndex(e => e.IdStructUnit, "id_struct_unit");
 
-            entity.HasIndex(e => e.IdDocumnet, "id_documnet").IsUnique();
-
-            entity.Property(e => e.IdRec)
-                .ValueGeneratedNever()
-                .HasColumnName("id_rec");
+            entity.Property(e => e.IdDocument)
+                .HasMaxLength(20)
+                .HasColumnName("id_document");
+            entity.Property(e => e.IdStructUnit).HasColumnName("id_struct_unit");
             entity.Property(e => e.AcceptanceDate).HasColumnName("acceptance_date");
             entity.Property(e => e.CheckDate).HasColumnName("check_date");
-            entity.Property(e => e.IdCategory).HasColumnName("id_category");
-            entity.Property(e => e.IdDocumnet)
-                .HasMaxLength(20)
-                .HasColumnName("id_documnet");
             entity.Property(e => e.NameGuid)
                 .HasMaxLength(90)
                 .HasColumnName("name_guid");
 
-            entity.HasOne(d => d.IdCategoryNavigation).WithMany(p => p.Guides)
-                .HasForeignKey(d => d.IdCategory)
+            entity.HasOne(d => d.IdStructUnitNavigation).WithMany(p => p.Guides)
+                .HasForeignKey(d => d.IdStructUnit)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("guides_ibfk_1");
+        });
+
+        modelBuilder.Entity<StructUnit>(entity =>
+        {
+            entity.HasKey(e => e.IdUnit).HasName("PRIMARY");
+
+            entity.ToTable("struct_units");
+
+            entity.HasIndex(e => e.NameStruct, "name_struct").IsUnique();
+
+            entity.Property(e => e.IdUnit)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id_unit");
+            entity.Property(e => e.NameStruct)
+                .HasMaxLength(200)
+                .HasColumnName("name_struct");
         });
 
         OnModelCreatingPartial(modelBuilder);
