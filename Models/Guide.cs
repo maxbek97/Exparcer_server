@@ -5,17 +5,15 @@ namespace server.Models;
 
 public partial class Guide
 {
-    public uint IdRec { get; set; }
+    public string IdDocument { get; set; } = null!;
 
     public string NameGuid { get; set; } = null!;
 
     public DateOnly AcceptanceDate { get; set; }
 
-    public string IdDocumnet { get; set; } = null!;
-
     public DateOnly CheckDate { get; set; }
 
-    public byte? IdCategory { get; set; }
+    public byte IdStructUnit { get; set; }
 
-    public virtual CategoryGuide? IdCategoryNavigation { get; set; }
+    public virtual StructUnit IdStructUnitNavigation { get; set; } = null!;
 }
