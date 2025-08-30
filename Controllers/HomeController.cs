@@ -32,7 +32,7 @@ public class HomeController : ControllerBase
     //    return Ok(new { message = mes });
     //}
     [HttpPost("create_record")]
-    public async Task<IActionResult> Create([FromBody] RecordDTO dto)
+    public async Task<IActionResult> Create([FromBody] CreateRecordDTO dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -45,7 +45,7 @@ public class HomeController : ControllerBase
         {
             return Ok(new { message = e.Message });
         }
-        
+
     }
 
     [HttpGet("get_units")]
@@ -55,4 +55,11 @@ public class HomeController : ControllerBase
         return Ok(units);
     }
 
+    [HttpGet("get_smart_units")]
+    public async Task<IActionResult> GetSortedFilteredGudes([FromQuery] List<int> structUnitId, [FromQuery] string sortType = "asc")
+    {
+        var result = await _guideService.GetFilteredGuides(structUnitId, sortType);
+        return Ok(result);
+    }
 }
+

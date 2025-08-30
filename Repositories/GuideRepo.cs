@@ -7,6 +7,7 @@ namespace server.Repositories
     {
         Task<bool> ExistsAsync(string idDocument, byte? idStructUnit);
         Task AddAsync(Guide guide);
+        Task<List<GetRecordDTO>> GetGuides(List<int> structUnitIds);
     }
 
     public class GuideRepository : IGuideRepository
@@ -29,6 +30,34 @@ namespace server.Repositories
             _context.Guides.Add(guide);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<GetRecordDTO>> GetGuides(List<int> structUnitIds)
+        {
+            IQueryable<Guide> query = _context.Guides;
+
+            if (structUnitIds != null && structUnitIds.Any())
+            {
+                query = query.Where(i => structUnitIds.Contains(i.IdStructUnit));
+            }
+
+            var guides_list = await query
+                .Select(j => new GetRecordDTO
+                {
+                    id_guid = j.IdDocument,
+                    name_guid = j.NameGuid,
+                    check_day = j.CheckDate,
+                    struct_name = j.IdStructUnitNavigation.NameStruct,
+                    acceptance_day = j.AcceptanceDate,
+                    days_remaining = EF.Functions.DateDiffDay(DateTime.Now,
+                        j.CheckDate.ToDateTime(TimeOnly.MinValue)
+                    )
+                })
+                .Take(60)
+                .ToListAsync();
+
+            return guides_list;
+        }
+
     }
 
 }
