@@ -55,10 +55,10 @@ public class HomeController : ControllerBase
         return Ok(units);
     }
 
-    [HttpGet("get_smart_units")]
-    public async Task<IActionResult> GetSortedFilteredGudes([FromQuery] List<int> structUnitId, [FromQuery] string sortType = "asc")
+    [HttpGet("smart_guidefinder")]
+    public async Task<IActionResult> GetSortedFilteredGudes([FromQuery] string guide_name = null, [FromQuery] List<int> structUnitId = null, [FromQuery] string sortType = "asc")
     {
-        var result = await _guideService.GetFilteredGuides(structUnitId, sortType);
+        var result = await _guideService.GetFilteredGuides(guide_name, structUnitId, sortType);
         return Ok(result);
     }
 }

@@ -10,7 +10,7 @@ namespace server.Services
     {
         Task CreateGuideAsync(CreateRecordDTO dto);
         Task<List<StructureUnitsDTO>> GetUnitsList();
-        Task<List<GetRecordDTO>> GetFilteredGuides(List<int> structUnitIds, string sortOrder = "asc");
+        Task<List<GetRecordDTO>> GetFilteredGuides(string guide_name, List<int> structUnitIds, string sortOrder = "asc");
     }
 
     public class GuideService : IGuideService
@@ -56,9 +56,9 @@ namespace server.Services
             var structures = await _unitRepository.GetUnitsAsync();
             return structures;
         }
-        public async Task<List<GetRecordDTO>> GetFilteredGuides(List<int> structUnitIds, string sortOrder)
+        public async Task<List<GetRecordDTO>> GetFilteredGuides(string guide_name, List<int> structUnitIds, string sortOrder)
         {
-            var filteredList = await _guideRepository.GetGuides(structUnitIds);
+            var filteredList = await _guideRepository.GetGuides(guide_name, structUnitIds);
 
             var sortedGuides = sortOrder == "asc" ? filteredList.OrderByDescending(i => i.days_remaining) : filteredList.OrderBy(i => i.days_remaining);
 

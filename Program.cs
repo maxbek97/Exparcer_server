@@ -6,6 +6,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // фронтенд
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ExcelParcerContext>(options => options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -32,6 +42,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+// Используем CORS
+app.UseCors("AllowReactDev");
 
 app.MapControllers();
 
