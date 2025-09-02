@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace server.Models;
 
+/// <summary>
+/// Объект, описывающий сущность Инструкции из БД. Создан Entity Framework
+/// </summary>
 public partial class Guide
 {
     public string IdDocument { get; set; } = null!;

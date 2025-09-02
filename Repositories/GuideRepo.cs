@@ -18,19 +18,34 @@ namespace server.Repositories
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Делает запрос в БД существует ли Инструкция с таким Номером, в таком структурном подразделении.
+        /// </summary>
+        /// <param name="idDocument">Обозначение(номер) инструкции</param>
+        /// <param name="idStructUnit">Идентификатор структурного подразделения</param>
+        /// <returns>Если есть совпадение возвращает True</returns>
         public async Task<bool> ExistsAsync(string idDocument, byte? idStructUnit)
         {
             return await _context.Guides
                 .AnyAsync(g => g.IdDocument == idDocument && g.IdStructUnit == idStructUnit);
         }
 
+        /// <summary>
+        /// Добавляет переданную инструкцию в БД
+        /// </summary>
+        /// <param name="guide">Данные об инструкции</param>
+        /// <returns>Я так понял, кол-во записей добавленных в БД</returns>
         public async Task AddAsync(Guide guide)
         {
             _context.Guides.Add(guide);
             await _context.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Возвращает список инструкций, с частично или полностью совпадающем названием ии обозначением(номером) инструкции в указанных структурных подразделениях
+        /// </summary>
+        /// <param name="guide_name">Название или обозначение(номер) инструкции</param>
+        /// <param name="structUnitIds">Список идентификаторов структурных единиц</param>
+        /// <returns>Список инструкций</returns>
         public async Task<List<GetRecordDTO>> GetGuides(string guide_name, List<int> structUnitIds)
         {
             IQueryable<Guide> query = _context.Guides;

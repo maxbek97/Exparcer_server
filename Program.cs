@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Models;
 using server.Repositories;
 using server.Services;
+using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -24,7 +25,12 @@ builder.Services.AddDbContext<ExcelParcerContext>(options => options.UseMySql(
 );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+}
+    );
 
 builder.Services.AddScoped<IStructUnitRepository, StructUnitRepository>();
 builder.Services.AddScoped<IGuideRepository, GuideRepository>();

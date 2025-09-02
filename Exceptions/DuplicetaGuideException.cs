@@ -1,5 +1,8 @@
 ﻿namespace server.Exceptions
 {
+    /// <summary>
+    /// Классы, описывающий ошибку, при попытке добавления в БД записи с уже существующим первичным ключем
+    /// </summary>
     public class DuplicateGuideException : Exception
     {
         public DuplicateGuideException() { }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 
 namespace server.Models;
-
+/// <summary>
+/// Модель описывающая сущность Структурной единицы из БД. Создан Entity Framework
+/// </summary>
 public partial class StructUnit
 {
     public byte IdUnit { get; set; }
